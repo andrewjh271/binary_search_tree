@@ -28,8 +28,9 @@ class Tree
 
   def display
     levels = depth
-    if levels > 5
-      puts "Can only display up to 5 levels. Current # of levels: #{levels}"
+    # depth without argument = levels below root
+    if levels > 4
+      puts "Can only display up to 5 levels. Current # of levels: #{levels + 1}"
       return
     end
     66.times { print '-' }
@@ -168,10 +169,17 @@ class Tree
     left_depth > right_depth ? left_depth : right_depth
   end
 
-  def balanced?
-    return false if empty?
+  def balanced?(local_root = @root)
+    return false unless (depth(local_root.left) -
+                        depth(local_root.right)).abs <= 1
 
-    balanced_rec(@root)
+    if local_root.left
+      return false unless balanced?(local_root.left)
+    end
+    if local_root.right
+      return false unless balanced?(local_root.right)
+    end
+    true
   end
 
   def rebalance
@@ -195,18 +203,5 @@ class Tree
       successor.right = node.right
     end
     successor
-  end
-
-  def balanced_rec(local_root)
-    return false unless (depth(local_root.left) -
-                        depth(local_root.right)).abs <= 1
-
-    if local_root.left
-      return false unless balanced_rec(local_root.left)
-    end
-    if local_root.right
-      return false unless balanced_rec(local_root.right)
-    end
-    true
   end
 end
