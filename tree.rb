@@ -27,7 +27,7 @@ class Tree
   end
 
   def display
-    levels = depth_recursion(@root)
+    levels = depth
     if levels > 5
       puts "Can only display up to 5 levels. Current # of levels: #{levels}"
       return
@@ -159,12 +159,13 @@ class Tree
     arr unless block_given?
   end
 
-  # Node class is only visible to Tree class
-  def depth(key)
-    key_node = find(key)
-    return false unless key_node
+  # Finds Node in tree that matches value of Node in argument to allow access outside of Tree class
+  def depth(local_root = @root)
+    return -1 if local_root.nil? || !(local_root = find(local_root.value))
 
-    depth_recursion(key_node)
+    left_depth = 1 + depth(local_root.left)
+    right_depth = 1 + depth(local_root.right)
+    left_depth > right_depth ? left_depth : right_depth
   end
 
   def balanced?
@@ -196,17 +197,9 @@ class Tree
     successor
   end
 
-  def depth_recursion(local_root)
-    return -1 if local_root.nil?
-
-    left_depth = 1 + depth_recursion(local_root.left)
-    right_depth = 1 + depth_recursion(local_root.right)
-    left_depth > right_depth ? left_depth : right_depth
-  end
-
   def balanced_rec(local_root)
-    return false unless (depth_recursion(local_root.left) -
-                        depth_recursion(local_root.right)).abs <= 1
+    return false unless (depth(local_root.left) -
+                        depth(local_root.right)).abs <= 1
 
     if local_root.left
       return false unless balanced_rec(local_root.left)
