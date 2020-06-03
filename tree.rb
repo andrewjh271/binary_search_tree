@@ -17,12 +17,13 @@ class Tree
   end
 
   def build_tree(arr)
+    return nil if arr.empty?
     return Node.new(arr.first) if arr.length < 2
 
     mid = arr.length / 2
     root = Node.new(arr[mid])
     root.left = build_tree(arr.take(mid))
-    root.right = build_tree(arr.drop(mid + 1)) unless arr.drop(mid + 1).empty?
+    root.right = build_tree(arr.drop(mid + 1))
     root
   end
 
