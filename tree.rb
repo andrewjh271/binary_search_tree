@@ -36,31 +36,28 @@ class Tree
     2.times { puts }
     queue = []
     return if empty?
+
     blank = Node.new('--')
     blank.left = blank
     blank.right = blank
-
     level = 0
     i = 0
     n_blanks = 32
     n_blanks.times { print ' ' }
     queue << @root
     until queue.empty?
-      
       current = queue.shift
-      queue << (current.left ? current.left : blank)
-      queue << (current.right ? current.right : blank)
+      queue << (current.left || blank)
+      queue << (current.right || blank)
       print current.value
       (n_blanks * 2 - 2).times { print ' ' }
-      
       i += 1
       if i == 2**(level + 1) - 1
         puts
         break if queue.all?(blank)
         level += 1
         n_blanks /= 2
-        n_blanks.times { print ' ' }
-        
+        n_blanks.times { print ' ' }  
       end
     end
     puts
@@ -262,11 +259,11 @@ class Tree
   end
 
   def balanced_rec(local_root)
-    return false unless (depth_recursion(local_root.left) - 
+    return false unless (depth_recursion(local_root.left) -
                         depth_recursion(local_root.right)).abs <= 1
-    
+
     if local_root.left
-      return false unless balanced_rec(local_root.left) 
+      return false unless balanced_rec(local_root.left)
     end
     if local_root.right
       return false unless balanced_rec(local_root.right)
