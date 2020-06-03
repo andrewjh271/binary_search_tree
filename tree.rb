@@ -121,31 +121,15 @@ class Tree
     current
   end
 
-  def level_order
-    array = []
-    queue = []
-    return array if empty?
+  def level_order(queue = [@root], arr = [], &block)
+    current = queue.shift
+    return if current.nil?
 
-    queue << @root
-    until queue.empty?
-      current = queue.shift
-      queue << current.left unless current.left.nil?
-      queue << current.right unless current.right.nil?
-      array << current.value
-    end
-    return array unless block_given?
-
-    array.each { |item| yield item }
-  end
-
-  # same method as above, using recursion
-  def level_order_alt
-    return [] if empty?
-
-    array = level_order_rec([@root])
-    return array unless block_given?
-
-    array.each { |item| yield item }
+    queue << current.left unless current.left.nil?
+    queue << current.right unless current.right.nil?
+    block_given? ? (yield current) : (arr << current.value)
+    level_order(queue, arr, &block)
+    arr unless block_given?
   end
 
   def in_order(local_root = @root, arr = [], &block)
@@ -210,16 +194,6 @@ class Tree
       successor.right = node.right
     end
     successor
-  end
-
-  def level_order_rec(queue, array = [])
-    return array if queue.empty?
-
-    current = queue.shift
-    queue << current.left unless current.left.nil?
-    queue << current.right unless current.right.nil?
-    array << current.value
-    level_order_rec(queue, array)
   end
 
   def depth_recursion(local_root)
