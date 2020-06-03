@@ -56,9 +56,10 @@ class Tree
       if i == 2**(level + 1) - 1
         puts
         break if queue.all?(blank)
+
         level += 1
         n_blanks /= 2
-        n_blanks.times { print ' ' }  
+        n_blanks.times { print ' ' }
       end
     end
     puts
@@ -133,31 +134,17 @@ class Tree
     arr unless block_given?
   end
 
-  def in_order(local_root = @root, arr = [], &block)
-    return if local_root.nil?
+  [:preorder, :inorder, :postorder].each do |method|
+    define_method(method) do |local_root = @root, arr = [], &block|
+      return if local_root.nil?
 
-    in_order(local_root.left, arr, &block)
-    block_given? ? (yield local_root) : (arr << local_root.value)
-    in_order(local_root.right, arr, &block)
-    arr unless block_given?
-  end
-
-  def pre_order(local_root = @root, arr = [], &block)
-    return if local_root.nil?
-
-    block_given? ? (yield local_root) : (arr << local_root.value)
-    pre_order(local_root.left, arr, &block)
-    pre_order(local_root.right, arr, &block)
-    arr unless block_given?
-  end
-
-  def post_order(local_root = @root, arr = [], &block)
-    return if local_root.nil?
-
-    post_order(local_root.left, arr, &block)
-    post_order(local_root.right, arr, &block)
-    block_given? ? (yield local_root) : (arr << local_root.value)
-    arr unless block_given?
+      block ? (block.call local_root) : (arr << local_root.value) if method == :preorder
+      self.send(method, local_root.left, arr, &block)
+      block ? (block.call local_root) : (arr << local_root.value) if method == :inorder
+      self.send(method, local_root.right, arr, &block)
+      block ? (block.call local_root) : (arr << local_root.value) if method == :postorder
+      arr unless block
+    end
   end
 
   # Finds Node in tree that matches value of Node in argument to allow access outside of Tree class
@@ -183,7 +170,7 @@ class Tree
   end
 
   def rebalance
-    @root = build_tree(in_order)
+    @root = build_tree(inorder)
   end
 
   private
