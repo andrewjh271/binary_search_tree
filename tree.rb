@@ -148,34 +148,31 @@ class Tree
     array.each { |item| yield item }
   end
 
-  def in_order
-    return [] if empty?
+  def in_order(local_root = @root, arr = [], &block)
+    return if local_root.nil?
 
-    array = []
-    in_order_rec(@root, array)
-    return array unless block_given?
-
-    array.each { |item| yield item }
+    in_order(local_root.left, arr, &block)
+    block_given? ? (yield local_root) : (arr << local_root.value)
+    in_order(local_root.right, arr, &block)
+    arr unless block_given?
   end
 
-  def pre_order
-    return [] if empty?
+  def pre_order(local_root = @root, arr = [], &block)
+    return if local_root.nil?
 
-    array = []
-    pre_order_rec(@root, array)
-    return array unless block_given?
-
-    array.each { |item| yield item }
+    block_given? ? (yield local_root) : (arr << local_root.value)
+    pre_order(local_root.left, arr, &block)
+    pre_order(local_root.right, arr, &block)
+    arr unless block_given?
   end
 
-  def post_order
-    return [] if empty?
+  def post_order(local_root = @root, arr = [], &block)
+    return if local_root.nil?
 
-    array = []
-    post_order_rec(@root, array)
-    return array unless block_given?
-
-    array.each { |item| yield item }
+    post_order(local_root.left, arr, &block)
+    post_order(local_root.right, arr, &block)
+    block_given? ? (yield local_root) : (arr << local_root.value)
+    arr unless block_given?
   end
 
   # Node class is only visible to Tree class
@@ -223,30 +220,6 @@ class Tree
     queue << current.right unless current.right.nil?
     array << current.value
     level_order_rec(queue, array)
-  end
-
-  def in_order_rec(local_root, array)
-    return if local_root.nil?
-
-    in_order_rec(local_root.left, array)
-    array << local_root.value
-    in_order_rec(local_root.right, array)
-  end
-
-  def pre_order_rec(local_root, array)
-    return if local_root.nil?
-
-    array << local_root.value
-    pre_order_rec(local_root.left, array)
-    pre_order_rec(local_root.right, array)
-  end
-
-  def post_order_rec(local_root, array)
-    return if local_root.nil?
-
-    post_order_rec(local_root.left, array)
-    post_order_rec(local_root.right, array)
-    array << local_root.value
   end
 
   def depth_recursion(local_root)
