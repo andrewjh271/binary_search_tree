@@ -13,12 +13,13 @@ class TreeApp
   puts "Inorder: #{tree.inorder}"
   puts "Postorder: #{tree.postorder}"
   puts "Level order: #{tree.level_order}"
-  7.times { tree.insert(rand(100...150)) }
-  puts "Depth: #{tree.depth + 1}"
+  10.times { tree.insert(rand(100...150)) }
+  (20..30).each { |i| tree.delete(i) }
   tree.display
   puts "Balanced? #{tree.balanced?}"
   tree.rebalance
   tree.display
+  puts "Depth: #{tree.depth + 1}"
   puts "Balanced? #{tree.balanced?}"
   puts "Preorder: #{tree.preorder}"
   puts "Inorder: #{tree.inorder}"
