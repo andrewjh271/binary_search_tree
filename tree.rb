@@ -193,8 +193,7 @@ class Tree
   end
 
   def rebalance
-    array = level_order
-    @root = build_tree(array.sort)
+    @root = build_tree(in_order)
   end
 
   private
