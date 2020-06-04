@@ -135,14 +135,14 @@ class Tree
     arr unless block_given?
   end
 
-  [:preorder, :inorder, :postorder].each do |method|
+  %i[preorder inorder postorder].each do |method|
     define_method(method) do |local_root = @root, arr = [], &block|
       return if local_root.nil?
 
       block ? (block.call local_root) : (arr << local_root.value) if method == :preorder
-      self.send(method, local_root.left, arr, &block)
+      send(method, local_root.left, arr, &block)
       block ? (block.call local_root) : (arr << local_root.value) if method == :inorder
-      self.send(method, local_root.right, arr, &block)
+      send(method, local_root.right, arr, &block)
       block ? (block.call local_root) : (arr << local_root.value) if method == :postorder
       arr unless block
     end

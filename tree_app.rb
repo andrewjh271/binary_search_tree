@@ -25,8 +25,11 @@ class TreeApp
   puts "Inorder: #{tree.inorder}"
   puts "Postorder: #{tree.postorder}"
   puts "Level order: #{tree.level_order}"
-  puts "Testing blocks..."
-  puts tree.preorder { |v| (v.value / 30).times { print 'HI' } }
-  puts tree.inorder { |v| print "#{v.value * 10} " }
-  puts tree.postorder { |v| print "#{v.value + 10} " }
+  puts 'Testing blocks...'
+  tree.preorder { |v| (v.value / 30).times { print 'HI' } }
+  puts
+  tree.inorder { |v| print "#{v.value * 10} " }
+  puts
+  tree.postorder { |v| print "#{v.value + 10} " }
+  puts
 end
